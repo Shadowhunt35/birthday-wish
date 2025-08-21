@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Roshni!</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Great Vibes for heading, Montserrat for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the page and confetti */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden; /* Hide scrollbars */
+        }
+        .font-cursive {
+            font-family: 'Great Vibes', cursive;
+        }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 16px; /* rectangular shape for a streamer effect */
+            background-color: #fff;
+            opacity: 0.7;
+            animation: fall 6s linear infinite;
+        }
+        .confetti.gold { background-color: #FFD700; }
+        .confetti.pink { background-color: #FFC0CB; }
+        .confetti.silver { background-color: #C0C0C0; }
+
+        /* Animation for the falling confetti */
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotateZ(0deg) rotateY(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotateZ(720deg) rotateY(360deg); opacity: 0; }
+        }
+        
+        /* Animation for the main content card */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        #main-content { animation: fadeIn 1s ease-out forwards; }
+
+        /* Styles for the modals */
+        .modal {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .modal-hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+        .modal-visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-rose-100 via-pink-200 to-purple-200 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Content Container -->
+    <div id="main-content" class="text-center bg-white/30 backdrop-blur-xl p-8 md:p-12 rounded-2xl shadow-2xl max-w-lg w-full">
+        <h1 class="font-cursive text-6xl md:text-8xl text-gray-800 drop-shadow-sm mb-4">
+            Happy Birthday, Roshni!
+        </h1>
+        <div id="wish-prompt">
+            <p class="text-lg md:text-xl text-gray-700/90 mb-8 font-light">
+                May your special day be as bright and beautiful as you are. Wishing you a year ahead filled with joy, success, and unforgettable moments.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button id="show-poem-btn" class="bg-indigo-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-indigo-600 transform hover:scale-105 transition-transform duration-300 ease-in-out w-full sm:w-auto">
+                    ✨ Poem for U ✨
+                </button>
+                
+                <button id="show-wish-modal-btn" class="bg-white text-gray-700 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-transform duration-300 ease-in-out w-full sm:w-auto">
+                    Make a Wish
+                </button>
+                
+            </div>
+        </div>
+        <div id="wish-confirmation" class="hidden">
+             <p class="text-xl md:text-2xl text-indigo-800 font-semibold mb-4">
+                Your beautiful wish has been sent to the stars!
+            </p>
+            <p class="text-lg text-gray-700">
+                May it travel across the universe and come back to you as a wonderful reality. Have the happiest of birthdays!
+            </p>
+        </div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div id="confetti-container" class="absolute top-0 left-0 w-full h-full pointer-events-none"></div>
+
+    <!-- Make a Wish Modal -->
+    <div id="wish-modal" class="modal modal-hidden fixed inset-0 bg-black/40 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full relative">
+            <button id="close-wish-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Make Your Birthday Wish</h2>
+            <p class="text-gray-600 mb-4">Close your eyes, think of something wonderful, and write it down here.</p>
+            <textarea id="wish-input" placeholder="I wish for..." class="w-full p-3 border border-gray-300 rounded-lg mb-4 h-28 resize-none focus:ring-2 focus:ring-pink-400 focus:outline-none"></textarea>
+            <button id="submit-wish-btn" class="w-full bg-pink-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-pink-600 transition-colors duration-300">Send My Wish</button>
+        </div>
+    </div>
+
+    <!-- Poem Display Modal -->
+    <div id="poem-display-modal" class="modal modal-hidden fixed inset-0 bg-black/40 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full relative text-center">
+            <button id="close-poem-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">A Little Poem for You</h2>
+            <div class="text-gray-700 text-lg">
+                <p class="mb-4">A special wish for you, Roshni, so bright,</p>
+                <p class="mb-4">May your world be filled with pure delight.</p>
+                <p class="mb-4">With laughter that sparkles and dreams that take flight,</p>
+                <p>Happy Birthday, you're a beautiful light!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Confetti Effect ---
+        const confettiContainer = document.getElementById('confetti-container');
+        const confettiColors = ['gold', 'pink', 'silver'];
+        function createConfettiPiece() {
+            const confettiEl = document.createElement('div');
+            confettiEl.classList.add('confetti', confettiColors[Math.floor(Math.random() * confettiColors.length)]);
+            confettiEl.style.left = Math.random() * 100 + 'vw';
+            confettiEl.style.animationDelay = Math.random() * 4 + 's';
+            confettiEl.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            confettiContainer.appendChild(confettiEl);
+            setTimeout(() => confettiEl.remove(), 7000);
+        }
+        function celebrate() {
+            for (let i = 0; i < 150; i++) createConfettiPiece(); // More confetti for the wish!
+        }
+        setTimeout(() => { for (let i = 0; i < 70; i++) createConfettiPiece() }, 500);
+
+        // --- Make a Wish Modal Logic ---
+        const wishModal = document.getElementById('wish-modal');
+        const showWishModalBtn = document.getElementById('show-wish-modal-btn');
+        const closeWishModalBtn = document.getElementById('close-wish-modal-btn');
+        const submitWishBtn = document.getElementById('submit-wish-btn');
+        const wishInput = document.getElementById('wish-input');
+        const wishPrompt = document.getElementById('wish-prompt');
+        const wishConfirmation = document.getElementById('wish-confirmation');
+
+        showWishModalBtn.addEventListener('click', () => wishModal.classList.replace('modal-hidden', 'modal-visible'));
+        closeWishModalBtn.addEventListener('click', () => wishModal.classList.replace('modal-visible', 'modal-hidden'));
+        submitWishBtn.addEventListener('click', () => {
+            if (wishInput.value.trim() === "") {
+                // Using a custom styled modal for alerts is better, but for simplicity:
+                alert("Don't forget to write your wish!");
+                return;
+            }
+            wishModal.classList.replace('modal-visible', 'modal-hidden');
+            wishPrompt.style.display = 'none';
+            wishConfirmation.style.display = 'block';
+            celebrate();
+        });
+
+        // --- Poem Display Modal Logic ---
+        const poemDisplayModal = document.getElementById('poem-display-modal');
+        const showPoemBtn = document.getElementById('show-poem-btn');
+        const closePoemModalBtn = document.getElementById('close-poem-modal-btn');
+
+        showPoemBtn.addEventListener('click', () => poemDisplayModal.classList.replace('modal-hidden', 'modal-visible'));
+        closePoemModalBtn.addEventListener('click', () => poemDisplayModal.classList.replace('modal-visible', 'modal-hidden'));
+        
+        // Close modal if clicking on the background
+        [wishModal, poemDisplayModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.replace('modal-visible', 'modal-hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
